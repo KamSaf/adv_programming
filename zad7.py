@@ -52,7 +52,7 @@ class Brewery:
         )
 
     @staticmethod
-    def fetch_data(count: int) -> list:
+    def fetch_data(count: int = 20) -> list:
         return json.loads(
             requests.get(
                 f"https://api.openbrewerydb.org/v1/breweries?per_page={count}"

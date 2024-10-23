@@ -48,7 +48,7 @@ class Brewery:
         )
 
     @staticmethod
-    def fetch_data(count: int, city: str | None = None) -> list:
+    def fetch_data(count: int = 20, city: str | None = None) -> list:
         url = (
             f"https://api.openbrewerydb.org/v1/breweries?by_city={city}&?per_page={count}"
             if city
