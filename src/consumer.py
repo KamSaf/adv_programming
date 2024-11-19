@@ -13,12 +13,10 @@ async def check_tasks() -> None:
         with open(FILE_PATH, "r") as file:
             for line in file:
                 split_line = line.split("|")
-                if (
-                    split_line[-1].strip() == "pending"
-                    and int(split_line[0]) - 1 not in pending_tasks
-                ):
+                task_id = int(split_line[0]) - 1
+                if split_line[-1].strip() == "pending" and task_id not in pending_tasks:
                     print("new task found!")
-                    pending_tasks.append(int(split_line[0]) - 1)
+                    pending_tasks.append(task_id)
 
 
 def update_task_status(task_id: int, status: str) -> None:
@@ -38,7 +36,7 @@ async def consume_task() -> None:
             await asyncio.sleep(2)
             continue
         task_id = pending_tasks[0]
-        print("doing task...")
+        print("processing task...")
         pending_tasks = pending_tasks[1:]
         update_task_status(task_id=task_id, status="in_progress")
         await asyncio.sleep(30)
