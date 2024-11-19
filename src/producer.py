@@ -6,10 +6,8 @@ DEFAULT_TASK_NAME = "do something"
 
 def create_task(task_name: str = DEFAULT_TASK_NAME) -> None:
     Path(FILE_PATH).touch(exist_ok=True)
-    with open(FILE_PATH, "r") as file:
+    with open(FILE_PATH, "r+") as file:
         task_num = sum(1 for _ in file) + 1
-
-    with open(FILE_PATH, "a") as file:
         file.write(f"{task_num} | {task_name} | pending\n")
 
 
