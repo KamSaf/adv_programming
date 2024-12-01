@@ -1,4 +1,4 @@
-from src.utils import create_database, connect
+from utils import create_database, connect
 
 DEFAULT_TASK_NAME = "do something"
 
