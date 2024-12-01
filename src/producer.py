@@ -1,12 +1,10 @@
-import sqlite3
-from src.utils import create_database, FILE_PATH
+from src.utils import create_database, connect
 
 DEFAULT_TASK_NAME = "do something"
 
 
 def create_task(task_name: str = DEFAULT_TASK_NAME) -> None:
-    conn = sqlite3.connect(FILE_PATH)
-    cur = conn.cursor()
+    conn, cur = connect()
     cur.execute(
         "INSERT INTO task (task_name, status) VALUES (:task_name, :status)",
         {"task_name": task_name, "status": "pending"},

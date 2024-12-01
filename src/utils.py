@@ -4,11 +4,15 @@ import sqlite3
 FILE_PATH = "queue.db"
 
 
+def connect() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
+    conn = sqlite3.connect(FILE_PATH)
+    return (conn, conn.cursor())
+
+
 def create_database() -> None:
     if os.path.isfile(FILE_PATH):
         return
-    conn = sqlite3.connect(FILE_PATH)
-    cur = conn.cursor()
+    conn, cur = connect()
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS task
@@ -24,9 +28,9 @@ def create_database() -> None:
     conn.close()
 
 
+# for testing
 def print_tasks():
-    conn = sqlite3.connect(FILE_PATH)
-    cur = conn.cursor()
+    conn, cur = connect()
     print(list(cur.execute("SELECT * FROM task")))
     conn.close()
 
