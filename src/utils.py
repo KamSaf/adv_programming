@@ -28,12 +28,5 @@ def create_database() -> None:
     conn.close()
 
 
-# for testing
-def print_tasks():
-    conn, cur = connect()
-    print(list(cur.execute("SELECT * FROM task")))
-    conn.close()
-
-
 if __name__ == "__main__":
     pass
