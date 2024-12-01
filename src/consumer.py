@@ -1,7 +1,7 @@
-from pathlib import Path
 import asyncio
+import os
+from utils import create_database, connect, FILE_PATH
 
-FILE_PATH = "queue.txt"
 pending_tasks = []
 
 
@@ -9,24 +9,23 @@ async def check_tasks() -> None:
     global pending_tasks
     while True:
         await asyncio.sleep(5)
-        # print("Looking for new tasks...")
-        with open(FILE_PATH, "r") as file:
-            for line in file:
-                split_line = line.split("|")
-                task_id = int(split_line[0]) - 1
-                if split_line[-1].strip() == "pending" and task_id not in pending_tasks:
-                    print("New task found!")
-                    pending_tasks.append(task_id)
+        conn, cur = connect()
+        rows = list(cur.execute("SELECT id FROM task WHERE status = 'pending'"))
+        pending_tasks_ids = [row[0] for row in rows if row[0] not in pending_tasks]
+        if len(pending_tasks_ids) > 0:
+            print("New tasks found!")
+            pending_tasks += pending_tasks_ids
+        conn.close()
 
 
 def update_task_status(task_id: int, status: str) -> None:
-    with open(FILE_PATH, "r") as file:
-        file_data = file.readlines()
-    new_line = file_data[task_id].split("|")
-    new_line[2] = f" {status}"
-    file_data[task_id] = "|".join(new_line) + "\n"
-    with open(FILE_PATH, "w") as file:
-        file.writelines(file_data)
+    conn, cur = connect()
+    cur.execute(
+        "UPDATE task SET status = :status WHERE id = :id",
+        {"status": status, "id": task_id},
+    )
+    conn.commit()
+    conn.close()
 
 
 async def consume_task() -> None:
@@ -46,7 +45,8 @@ async def consume_task() -> None:
 
 async def main() -> None:
     try:
-        Path(FILE_PATH).touch(exist_ok=True)
+        if not os.path.isfile(FILE_PATH):
+            create_database()
         print("Running...")
         await asyncio.gather(check_tasks(), consume_task())
     except asyncio.CancelledError:
