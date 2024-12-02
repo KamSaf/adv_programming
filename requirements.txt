@@ -3,3 +3,4 @@ numpy
 imutils
 flask
 requests
+flake8
