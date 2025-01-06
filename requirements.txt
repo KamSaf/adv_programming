@@ -1,2 +1,3 @@
 pytesseract
 flake8
+opencv-python
