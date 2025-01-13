@@ -1,6 +1,14 @@
+import argparse
 import cv2
 import numpy as np
 import imutils
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--id")
+args = parser.parse_args()
+
+print("hello " + args.id)
+
 
 hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
