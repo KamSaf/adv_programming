@@ -1,5 +1,7 @@
 from flask import Blueprint
 from src.config import app
+from src.queue.producer import create_task
+from src.queue.utils import get_status
 
 API_ROUTES_BP = Blueprint("api_routes", __name__)
 
@@ -19,19 +21,21 @@ def api_endpoints():
     }
 
 
-@app.route("/api/read/file", methods=["GET"])
-def api_read_file():
-    return {"message": "work in progess.."}
+@app.route("/api/read/file/<string:file_name>", methods=["GET"])
+def api_read_file(file_name):
+    id = create_task(file_name=file_name)
+    return {"message": "New task created", "task_id": id}
 
 
-@app.route("/api/read/url", methods=["GET", "POST"])
+@app.route("/api/read/url/<string:url_to_image>", methods=["GET", "POST"])
 def api_read_url():
     return {"message": "work in progess.."}
 
 
-@app.route("/api/task/status", methods=["GET"])
-def api_get_task_status():
-    return {"message": "work in progess.."}
+@app.route("/api/task/<string:id>", methods=["GET"])
+def api_get_task_status(id):
+    status = get_status(id)
+    return {"task_id": int(id), "task_status": status}
 
 
 @app.route("/api/upload", methods=["POST"])
