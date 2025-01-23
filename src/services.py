@@ -19,7 +19,9 @@ def create_task(file_name: str) -> int:
 
 def get_status(id: str) -> str:
     conn, cur = connect()
-    id = list(cur.execute("SELECT status FROM task WHERE id = :id", {"id": id}))[0][0]
+    id = list(
+        cur.execute("SELECT status, num_of_people FROM task WHERE id = :id", {"id": id})
+    )[0]
     conn.close()
     return id
 
