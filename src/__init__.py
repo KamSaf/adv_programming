@@ -1,5 +1,5 @@
 from src.routes.api import API_ROUTES_BP
-from src.queue.db import create_database
+from src.db import create_database
 
 
 def init_app(app):
