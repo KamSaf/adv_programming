@@ -1,7 +1,8 @@
 import os.path
 import sqlite3
+from src.config import ROOT_DIR
 
-FILE_PATH = "queue.db"
+FILE_PATH = f"{ROOT_DIR}/queue.db"
 
 
 def connect() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
@@ -19,7 +20,8 @@ def create_database() -> None:
         (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             file_name TEXT,
-            status TEXT
+            status TEXT,
+            num_of_people INTEGER DEFAULT 0
         )
         """
     )

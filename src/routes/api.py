@@ -59,8 +59,3 @@ def api_upload_file():
 
 if __name__ == "__main__":
     pass
-
-
-# TODO:
-#   - passing url as GET parameter
-#   -

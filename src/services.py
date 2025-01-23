@@ -1,7 +1,7 @@
 import time
-import os
 import requests
 from src.db import connect
+from src.config import ROOT_DIR
 
 
 def create_task(file_name: str) -> int:
@@ -25,7 +25,6 @@ def get_status(id: str) -> str:
 
 
 def save_image(url: str) -> str | None:
-    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))[:-4]
     response = requests.head(url)
     content_type = response.headers.get("Content-Type")
     if content_type and content_type.startswith("image/"):
