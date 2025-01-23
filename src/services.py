@@ -35,10 +35,27 @@ def save_image(url: str) -> str | None:
         img_data = requests.get(url).content
     except Exception:
         return None
-    file_name = f"{ROOT_DIR}/images/{str(time.time()).replace('.', '')}.{ext}"
-    with open(file_name, "wb") as handler:
+    file_name = f"{str(time.time()).replace('.', '')}.{ext}"
+    file_path = f"{ROOT_DIR}/images/{file_name}"
+    with open(file_path, "wb") as handler:
         handler.write(img_data)
     return file_name
+
+
+def update_task(task_id: int, status: str, num_of_people: int | None = None) -> None:
+    conn, cur = connect()
+    if num_of_people:
+        cur.execute(
+            "UPDATE task SET status = :status, num_of_people = :num_of_people WHERE id = :id",
+            {"status": status, "num_of_people": num_of_people, "id": task_id},
+        )
+    else:
+        cur.execute(
+            "UPDATE task SET status = :status WHERE id = :id",
+            {"status": status, "id": task_id},
+        )
+    conn.commit()
+    conn.close()
 
 
 if __name__ == "__main__":
