@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PYTHON_SCRIPT="src/consumer.py"
+PYTHON_SCRIPT="run_consumer.py"
 NUM_PROCESSES=3
 DELAY=10
 

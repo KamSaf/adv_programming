@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PYTHON_SCRIPT="src/consumer.py"
+PYTHON_SCRIPT="run_consumer.py"
 PIDS=$(pgrep -f "python3 $PYTHON_SCRIPT")
 
 if [ -z "$PIDS" ]; then
