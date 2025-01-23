@@ -60,5 +60,21 @@ def update_task(task_id: int, status: str, num_of_people: int | None = None) -> 
     conn.close()
 
 
+def create_response(id: int, status: str, num_of_people: int) -> dict:
+    response = (
+        {
+            "task_id": id,
+            "task_status": status,
+            "num_of_people": num_of_people,
+        }
+        if num_of_people
+        else {
+            "task_id": id,
+            "task_status": status,
+        }
+    )
+    return response
+
+
 if __name__ == "__main__":
     pass
