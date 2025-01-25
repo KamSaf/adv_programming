@@ -1,7 +1,6 @@
-import time
-import requests
+from time import sleep
 from src.db import connect
-from src.config import ROOT_DIR
+from src.utils import create_response
 
 
 def create_task(file_name: str) -> int:
@@ -26,22 +25,16 @@ def get_status(id: str) -> str:
     return id
 
 
-def save_image(url: str) -> str | None:
-    response = requests.head(url)
-    content_type = response.headers.get("Content-Type")
-    if content_type and content_type.startswith("image/"):
-        ext = content_type.split("/")[-1]
-    else:
-        return None
-    try:
-        img_data = requests.get(url).content
-    except Exception:
-        return None
-    file_name = f"{str(time.time()).replace('.', '')}.{ext}"
-    file_path = f"{ROOT_DIR}/images/{file_name}"
-    with open(file_path, "wb") as handler:
-        handler.write(img_data)
-    return file_name
+def await_analysis_result(file_name: str | None) -> dict:
+    id = create_task(file_name) if file_name else None
+    if not id:
+        return {"message": "Invalid data provided"}
+    status = "pending"
+    num_of_people = 0
+    while status != "done":
+        sleep(2)
+        status, num_of_people = get_status(str(id))
+    return create_response(id=id, status=status, num_of_people=int(num_of_people))
 
 
 def update_task(task_id: int, status: str, num_of_people: int | None = None) -> None:
@@ -58,22 +51,6 @@ def update_task(task_id: int, status: str, num_of_people: int | None = None) -> 
         )
     conn.commit()
     conn.close()
-
-
-def create_response(id: int, status: str, num_of_people: int) -> dict:
-    response = (
-        {
-            "task_id": id,
-            "task_status": status,
-            "num_of_people": num_of_people,
-        }
-        if num_of_people
-        else {
-            "task_id": id,
-            "task_status": status,
-        }
-    )
-    return response
 
 
 if __name__ == "__main__":
