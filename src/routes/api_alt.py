@@ -3,30 +3,30 @@ from src.config import app
 from src.services import create_task
 from src.utils import save_image_from_url
 
-API_ROUTES_BP = Blueprint("api_routes", __name__)
+API_ROUTES_BP = Blueprint("api_alt_routes", __name__)
 
 
 @app.route("/alt", methods=["GET"])
-def api_endpoints():
+def api_endpoints_alt():
     return {
         "GET": [
-            "/api/read/file/<file_name> => Reads image from drive and returns task ID",
+            "/api_alt/read/file/<file_name> => Reads image from drive and returns task ID",
         ],
         "POST": [
-            "/api/upload => Receives POST request containing image and returns task ID",
-            "/api/read/url => Reads image from URL and returns task ID",
+            "/api_alt/upload => Receives POST request containing image and returns task ID",
+            "/api_alt/read/url => Reads image from URL and returns task ID",
         ],
     }
 
 
 @app.route("/api_alt/read/file/<string:file_name>", methods=["GET"])
-def api_read_file(file_name):
+def api_read_file_alt(file_name):
     id = create_task(file_name=file_name)
     return {"message": "New task created", "task_id": id}
 
 
-@app.route("/api/read/url", methods=["POST"])
-def api_read_url_post():
+@app.route("/api_alt/read/url", methods=["POST"])
+def api_read_url_post_alt():
     content_type = request.headers.get("Content-Type")
     url = (
         request.json["url"]
@@ -39,8 +39,8 @@ def api_read_url_post():
     return {"message": message, "task_id": id}
 
 
-@app.route("/api/upload", methods=["POST"])
-def api_upload_file():
+@app.route("/api_alt/upload", methods=["POST"])
+def api_upload_file_alt():
     return {"message": "work in progess.."}
 
 
