@@ -1,5 +1,6 @@
 import time
 import requests
+from datetime import datetime
 from src.config import ROOT_DIR
 from src.config import ALLOWED_EXTENSIONS
 from werkzeug.datastructures import FileStorage
@@ -55,6 +56,12 @@ def check_file_ext(filename: str | None) -> bool:
         if filename
         else False
     )
+
+
+def log(message: str, consumer_id: int) -> None:
+    TIME_FORMAT = "%d/%m/%Y %H:%M:%S"
+    time = datetime.now().strftime(TIME_FORMAT)
+    print(f"[{time}] Consumer {consumer_id}: {message}")
 
 
 if __name__ == "__main__":
