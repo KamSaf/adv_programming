@@ -40,7 +40,13 @@ def save_image_from_url(url: str) -> str | None:
 
 
 def save_image(file: FileStorage) -> str | None:
-    return None
+    if not file.filename:
+        return None
+    ext = file.filename.rsplit(".", 1)[-1].lower()
+    file_name = f"{str(time.time()).replace('.', '')}.{ext}"
+    file_path = f"{ROOT_DIR}/images/{file_name}"
+    file.save(file_path)
+    return file_name
 
 
 def check_file_ext(filename: str | None) -> bool:
