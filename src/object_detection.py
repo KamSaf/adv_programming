@@ -10,6 +10,8 @@ def process_image(file_name: str) -> int:
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
     image = cv2.imread(file_path)
+    if image is None:
+        return 0
 
     MAX_WIDTH = 1500
     if image.shape[0] > MAX_WIDTH:
