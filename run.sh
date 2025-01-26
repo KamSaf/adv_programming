@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PYTHON_SCRIPT="run_consumer.py"
-NUM_PROCESSES=3
+NUM_PROCESSES=2
 DELAY=10
 
 for ((i=1; i<=NUM_PROCESSES; i++)); do

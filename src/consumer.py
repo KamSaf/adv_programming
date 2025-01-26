@@ -15,6 +15,7 @@ if CONSUMER_ID is None:
     exit()
 
 pending_tasks = []
+TASK_LIMIT = 2
 
 
 async def check_tasks() -> None:
@@ -24,7 +25,9 @@ async def check_tasks() -> None:
         await asyncio.sleep(5)
         conn, cur = connect()
         rows = list(
-            cur.execute("SELECT id, file_name  FROM task WHERE status = 'pending'")
+            cur.execute(
+                f"SELECT id, file_name  FROM task WHERE status = 'pending' LIMIT {TASK_LIMIT}"
+            )
         )
         conn.close()
         pending_tasks_info = [
@@ -33,6 +36,8 @@ async def check_tasks() -> None:
             if row[0] not in [el[0] for el in pending_tasks]
         ]
         if len(pending_tasks_info) > 0:
+            for task in pending_tasks_info:
+                update_task(task_id=task[0], status="in_progress")
             log(message="New tasks found!", consumer_id=CONSUMER_ID)
             pending_tasks += pending_tasks_info
 
@@ -45,9 +50,9 @@ async def consume_task():
             continue
         task_id = pending_tasks[0][0]
         file_name = pending_tasks[0][1]
-        log(message="Processing task...", consumer_id=CONSUMER_ID)
+        log(message=f"Processing task {task_id}...", consumer_id=CONSUMER_ID)
         pending_tasks = pending_tasks[1:]
-        update_task(task_id=task_id, status="in_progress")
+        # update_task(task_id=task_id, status="in_progress")
         num_of_people = process_image(file_name=file_name)
         update_task(task_id=task_id, status="done", num_of_people=num_of_people)
         log(message="Task done!", consumer_id=CONSUMER_ID)
