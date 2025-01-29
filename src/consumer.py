@@ -43,16 +43,14 @@ async def check_tasks() -> None:
 
 async def consume_task():
     global pending_tasks
-    if len(pending_tasks) == 0:
-        await asyncio.sleep(2)
-        pass
-    task_id = pending_tasks[0][0]
-    file_name = pending_tasks[0][1]
-    log(message=f"Processing task {task_id}...", consumer_id=CONSUMER_ID)
-    pending_tasks = pending_tasks[1:]
-    num_of_people = process_image(file_name=file_name)
-    update_task(task_id=task_id, status="done", num_of_people=num_of_people)
-    log(message="Task done!", consumer_id=CONSUMER_ID)
+    if len(pending_tasks):
+        task_id = pending_tasks[0][0]
+        file_name = pending_tasks[0][1]
+        log(message=f"Processing task {task_id}...", consumer_id=CONSUMER_ID)
+        pending_tasks = pending_tasks[1:]
+        num_of_people = process_image(file_name=file_name)
+        update_task(task_id=task_id, status="done", num_of_people=num_of_people)
+        log(message="Task done!", consumer_id=CONSUMER_ID)
 
 
 async def main() -> None:
